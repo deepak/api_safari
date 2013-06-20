@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+rackup --port 8080 --require='debugger' config.ru
