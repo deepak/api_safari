@@ -19,7 +19,7 @@ class Order < ActiveRecord::Base
 
   def as_json options = {}
     { orders:
-      { drink: self.coffee.name, price: self.coffee.price, status: self.status }
+      { id: self.id, drink: self.coffee.name, price: self.coffee.price, status: self.status }
     }
   end
 
