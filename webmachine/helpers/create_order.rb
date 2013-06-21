@@ -15,6 +15,9 @@ module Helper
       @coffee = Coffee.where(name: drink).first
     end
 
+    # This method is called just before the final response is
+    # constructed and sent. The return value is ignored, so any effect
+    # of this method must be by modifying the response.
     def finish_request
       unless @error
         response.headers['Location'] = "/orders/#{@order.id}"

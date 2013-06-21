@@ -16,6 +16,10 @@ MyApp = Webmachine::Application.new do |app|
       request.method == "PUT"
     end
 
+    add ['orders'], Resources::DeleteOrder do |request|
+      request.method == "DELETE"
+    end
+    
     add ['payment'], Resources::AcceptPayment do |request|
       request.method == "PUT"
     end

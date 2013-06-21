@@ -12,6 +12,24 @@ module Resources
     def content_types_accepted
       [["application/json", :from_json]]
     end
+
+    # Is the resource available? Returning a falsey value (false or
+    # nil) will result in a '503 Service Not Available'
+    # response. Defaults to true.  If the resource is only temporarily
+    # not available, add a 'Retry-After' response header in the body
+    # of the method.
+    def service_available?
+      # HTTP/1.1 503 Service Unavailable 
+      # Retry-After: Fri, 21 Jun 2013 04:30:00 GMT
+      now = Time.now
+      morning = Time.parse("#{now.strftime('%Y-%m-%d')} 05:00:00")
+      if now < morning
+        response.headers['Retry-After'] = morning.httpdate
+        false
+      else
+        true
+      end
+    end
     
     def handle_exception(e)
       @error = e
