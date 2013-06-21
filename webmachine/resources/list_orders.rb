@@ -2,36 +2,18 @@ module Resources
   class ListOrders < Starbucks
     include Webmachine::Resource::Authentication
 
-    # Does the resource exist? Returning a falsey value (false or nil)
-    # will result in a '404 Not Found' response.
-    def resource_exists?
-      if order_id
-        !order.nil?
-      else
-        true
-      end
-    end
-
     # This method should return the last modified date/time of the
     # resource which will be added as the Last-Modified header in the
     # response and used in negotiating conditional requests. Default
     # is nil.
     def last_modified
-      if order_id
-        order.updated_at
-      else
-        order = orders.order("updated_at desc").first
-        order && order.updated_at 
-      end
+      order = orders.order("updated_at desc").first
+      order && order.updated_at
     end
     
-    # curl -i -H "Content-Type: application/json" -X GET "0.0.0.0:8080/orders?status=paid" -u admin:password
+    # curl -i -H "Accept: application/json" -X GET "0.0.0.0:8080/orders?status=paid" -u admin:password
     def to_json
-      if order_id
-        order.to_json
-      else
-        orders.all.to_json
-      end
+      orders.all.to_json
     end
 
     def allowed_methods
@@ -47,22 +29,11 @@ module Resources
     end
 
     protected
-    def order_id
-      request.query["id"]
-    end
-
-    def order
-      Order.where(id: order_id).first
-    end
-
-    def order_status
-      status = request.query["status"]
-    end
-
     def orders
       @orders ||= begin
-                    if order_status
-                      Order.where(status: order_status)
+                    status = request.query["status"]
+                    if status
+                      Order.where(status: status)
                     else
                       Order
                     end

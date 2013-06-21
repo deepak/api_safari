@@ -14,11 +14,13 @@ class Order < ActiveRecord::Base
   end
   
   def calculate_total_cost
-    self.total_price = coffee.price
+    if coffee
+      self.total_price = coffee.price
+    end
   end
 
   def as_json options = {}
-    { orders:
+    { order:
       { id: self.id, drink: self.coffee.name, price: self.coffee.price, status: self.status }
     }
   end

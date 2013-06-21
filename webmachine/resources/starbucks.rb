@@ -4,11 +4,26 @@ module Resources
       {"gzip" => :encode_gzip, "identity" => :encode_identity}
     end
 
+    # This should return an array of pairs where each pair is of the
+    # form [mediatype, :handler] where mediatype is a String of
+    # Content-Type format (or {Webmachine::MediaType}) and :handler
+    # is a Symbol naming the method which can provide a resource
+    # representation in that media type. For example, if a client
+    # request includes an 'Accept' header with a value that does not
+    # appear as a first element in any of the return pairs, then a
+    # '406 Not Acceptable' will be sent.  Default is [['text/html',
+    # :to_html]].
     # NOTE: no text/html
+    # for Accept header
     def content_types_provided
       [["application/json", :to_json]]
     end
 
+    # Similarly to content_types_provided, this should return an array
+    # of mediatype/handler pairs, except that it is for incoming
+    # resource representations -- for example, PUT requests. Handler
+    # functions usually want to use {Request#body} to access the
+    # incoming entity. 
     def content_types_accepted
       [["application/json", :from_json]]
     end

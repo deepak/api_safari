@@ -26,7 +26,7 @@ module Resources
                              amount: payment["amount"])
     end
 
-    # curl -i -H "Content-Type: application/json" -d '{"payment": {"order_id": 1, "customer_name": "deepak", "amount": 120} }' -X PUT 0.0.0.0:8080/payment
+    # curl -i -H "Content-Type: application/json" -H "Accept: application/json" -d '{"payment": {"order_id": 1, "customer_name": "deepak", "amount": 120} }' -X PUT 0.0.0.0:8080/payment
     def accept_payment
       from_json
 

@@ -6,7 +6,7 @@ module Helper
 
     def drink
       @drink ||= begin
-                   incoming = JSON.parse(request.body.to_s)["orders"]
+                   incoming = JSON.parse(request.body.to_s)["order"]
                    incoming["drinks"]
                  end
     end
@@ -20,7 +20,7 @@ module Helper
     # of this method must be by modifying the response.
     def finish_request
       unless @error
-        response.headers['Location'] = "/orders/#{@order.id}"
+        response.headers['Location'] = "/orders?id=#{@order.id}"
         response.body = @order.to_json
       end
     end

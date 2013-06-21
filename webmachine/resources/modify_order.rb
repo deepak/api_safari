@@ -29,7 +29,7 @@ module Resources
       @order = Order.where(id: order_id).first
     end
 
-    # curl -i -H "Content-Type: application/json" -d '{"orders":{"drinks":"latte"}}' -X PUT "0.0.0.0:8080/orders?id=1
+    # curl -i -H "Content-Type: application/json" -H "Accept: application/json" -d '{"order":{"drinks":"latte"}}' -X PUT "0.0.0.0:8080/orders?id=1
     def modify_order
       from_json
 
