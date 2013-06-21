@@ -14,7 +14,9 @@ module Resources
     # response. This is only called for PUT requests. 
     def is_conflict?
       from_json
-      @order && @order.paid?
+      (@order && @order.paid?).tap do |x|
+        @error = true if x
+      end
     end
 
     # If the request is malformed, this should return true, which will

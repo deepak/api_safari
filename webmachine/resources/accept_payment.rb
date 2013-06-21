@@ -7,6 +7,14 @@ module Resources
     def content_types_accepted
       [["application/json", :accept_payment]]
     end
+
+    # If the request is malformed, this should return true, which will
+    # result in a '400 Malformed Request' response. 
+    def malformed_request?
+      # NOTE: not concerned customer is over or under charged      
+      from_json
+      @order.nil?
+    end
     
     def finish_request
       unless @error
@@ -26,13 +34,12 @@ module Resources
                              amount: payment["amount"])
     end
 
-    # curl -i -H "Content-Type: application/json" -H "Accept: application/json" -d '{"payment": {"order_id": 1, "customer_name": "deepak", "amount": 120} }' -X PUT 0.0.0.0:8080/payment
+    # "Accept: application/json" header is set
+    # curl -i -H "Content-Type: application/json" -d '{"payment": {"order_id": 1, "customer_name": "deepak", "amount": 120} }' -X PUT 0.0.0.0:8080/payment
     def accept_payment
       from_json
 
-      raise Error::OrderNotFound.new(order_id) unless @order
-      # NOTE: not concerned customer is over or under charged      
-
+      # raise Error::OrderNotFound.new(order_id) unless @order
       @payment.save
       
       200
