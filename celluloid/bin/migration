@@ -1,0 +1,60 @@
+#!/usr/bin/env ruby
+
+require 'pathname'
+ENV['BUNDLE_GEMFILE'] ||= File.expand_path("../../Gemfile",
+  Pathname.new(__FILE__).realpath)
+
+require 'rubygems'
+require 'bundler/setup'
+
+require './libs'
+
+# drops the tables when it runs because force is set to true
+module Migration
+  class CreateOrders < ActiveRecord::Migration
+    def change
+      create_table :orders, force: true do |t|
+        t.references :coffee
+        t.decimal :total_price
+        t.string :status
+        
+        t.timestamps
+      end
+      add_index :orders, :status
+    end
+  end
+
+  class CreateCoffees < ActiveRecord::Migration
+    def change
+      create_table :coffees, force: true do |t|
+        t.string :name
+        t.string :price
+        
+        t.timestamps
+      end
+      add_index :coffees, :name
+    end
+  end
+
+  class CreatePayment < ActiveRecord::Migration
+    def change
+      create_table :payments, force: true do |t|
+        t.references :order
+        t.string :customer_name
+        t.decimal :amount
+        
+        t.timestamps
+      end
+      add_index :payments, :order_id
+    end
+  end
+end
+
+Migration::CreateCoffees.migrate(:up)
+Migration::CreateOrders.migrate(:up)
+Migration::CreatePayment.migrate(:up)
+
+# populates database with some sample data
+Coffee.create(name: 'mocha', price: 55)
+Coffee.create(name: 'latte', price: 100)
+Coffee.create(name: 'filter', price: 125)

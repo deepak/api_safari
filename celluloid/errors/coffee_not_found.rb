@@ -1,0 +1,2 @@
+class CoffeeNotFound < StandardError
+end
